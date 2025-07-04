@@ -38,7 +38,7 @@
 
 ---
 
-## ✨ MVP Features
+## MVP Features
 
 - [x] User login/signup
 - [x] Create & join rooms
@@ -47,12 +47,12 @@
 - [x] Custom AI behavior per room
 - [x] AI responds in chat flow
 
-## 💡 Example Use Cases
+## Example Use Cases
 
-- 👨‍🏫 **Study Rooms**: AI acts as a teacher while students chat and ask doubts
-- 🧠 **Brainstorming Sessions**: AI behaves like an ideation partner
-- 💬 **Support Channels**: AI handles common queries, humans join in for complex cases
-- 📚 **Tutoring Spaces**: Assign an AI per subject to help learners in real time
+- **Study Rooms**: AI acts as a teacher while students chat and ask doubts
+- **Brainstorming Sessions**: AI behaves like an ideation partner
+- **Support Channels**: AI handles common queries, humans join in for complex cases
+- **Tutoring Spaces**: Assign an AI per subject to help learners in real time
 
 ---
 
