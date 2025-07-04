@@ -1,5 +1,5 @@
 import { getDB } from "../config/db.js";
-import { EmailUser } from "../models/EmailUser.js";
+import { EmailUser } from "../models/User/EmailUser.js";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 import { ApiError } from "../errors/ApiError.js";
@@ -62,7 +62,6 @@ export async function createUser({ email, password, role = "user" }) {
     return { id: insertedId, email, role };
 }
 
-// Add OTP verification logic
 export async function verifyUserOtp(email, otp) {
     const db = getDB();
     const user = await findUserByEmail(email);
