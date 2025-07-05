@@ -5,13 +5,11 @@ import { generateOpenAIResponse } from '../services/openai.service.js';
 
 const chatSocketHandler = (socket, io) => {
     console.log(` Socket connected: ${socket.id}`);
-    // Join room
+
     socket.on('joinRoom', ({ roomId, user }) => {
-        console.log("Room Joined On Server!")
         roomId = new ObjectId(roomId);
         socket.join(roomId);
-        socket.data.user = user;
-        console.log(`User ${user.name} joined room ${roomId}`);
+        console.log(`User ${socket.data.user._id} joined room ${roomId}`);
         io.to(roomId).emit('userJoined', { user });
     });
 
@@ -24,7 +22,6 @@ const chatSocketHandler = (socket, io) => {
         const saved = await saveMessage(roomId, user._id, message, false);
         io.to(roomId).emit('receiveMessage', saved);
 
-        // Trigger AI response if message tagged (e.g., "@ai" or similar)
         if (message.toLowerCase().startsWith('@ai')) {
             const aiReply = await generateOpenAIResponse(roomId, message);
             const savedAI = await saveMessage(roomId, 'ai', aiReply, true);
@@ -33,7 +30,7 @@ const chatSocketHandler = (socket, io) => {
     });
 
     socket.on('disconnect', () => {
-        console.log(`❌ Socket disconnected: ${socket.id}`);
+        console.log(`Socket disconnected: ${socket.id}`);
     });
 };
 

@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import http from 'http';
 import { Server } from 'socket.io';
+import jwt from 'jsonwebtoken';
 
 import app from "./app.js";
 import { connectDB } from "./config/db.js";
@@ -14,6 +15,21 @@ const io = new Server(server, {
     cors: {
         origin: process.env.CLIENT_URL,
         methods: ['GET', 'POST']
+    }
+});
+
+io.use((socket, next) => {
+    const token = socket.handshake.auth?.token;
+    if (!token) {
+        return next(new Error('Unauthorized'));
+    }
+    try {
+        const user = jwt.verify(token, process.env.JWT_SECRET);
+        socket.data.user = user;
+        next();
+    } catch (err) {
+        console.log(err);
+        return next(new Error('Invalid token'));
     }
 });
 
