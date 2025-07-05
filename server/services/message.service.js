@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb';
-import { connectDB } from '../config/db.js';
+import { getDB } from '../config/db.js';
 
 const COLLECTION_NAME = 'messages';
 
 export const saveMessage = async (roomId, senderId, content, isAI = false) => {
-  const db = await connectDB();
+ const db = getDB();
   const message = {
     roomId: new ObjectId(roomId),
     senderId: isAI ? 'ai' : new ObjectId(senderId),

@@ -3,11 +3,13 @@ import axios from "axios";
 
 import { ObjectId } from "mongodb";
 import { ApiError } from "../errors/ApiError.js";
+import { getDB } from "../config/db.js";
 
 const buildOpenAIUrl = () =>
     `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_DEPLOYMENT_NAME}/chat/completions?api-version=${process.env.AZURE_OPENAI_API_VERSION}`;
 
 export const generateOpenAIResponse = async (roomId, userMessage) => {
+    const db = getDB();
     const room = await db.collection('rooms').findOne({ _id: new ObjectId(roomId) });
     if (!room) throw new ApiError("Room not found", 400);
 
