@@ -15,13 +15,16 @@ socket.on("connect", () => {
         }
     });
 
+    console.log("Joined the room")
+
     socket.emit("sendMessage", {
         roomId: "6868b9f4d1afeae22a0c9ece",
         message: "@ai Can you help explain recursion?"
     });
+
+    console.log("Message Sent to AI")
 });
 
-// Log received messages
 socket.on("receiveMessage", (msg) => {
     console.log("📥 Message received:", msg);
 });
