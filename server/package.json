@@ -17,9 +17,11 @@
     "dayjs": "^1.11.13",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
+    "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.17.0",
     "nodemailer": "^7.0.4",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "socket.io": "^4.8.1"
   }
 }
