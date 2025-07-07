@@ -5,6 +5,7 @@
   background: #2b2d31;
   color: white;
   flex: 1;
+  margin-left: 80px;
 }
 
 .chat-header {
@@ -52,4 +53,10 @@
 
 .chat-input button:hover {
   background-color: #4752c4;
+}
+
+@media (max-width: 768px) {
+  .chat-window {
+    margin-left: 0;
+  }
 }
