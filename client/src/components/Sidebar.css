@@ -1,0 +1,84 @@
+
+.sidebar {
+    width: 80px;
+    height: 100vh;
+    background-color: #1e1f22;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+    color: #fff;
+    transition: transform 0.3s ease;
+    position: fixed;
+    z-index: 1000;
+}
+
+.sidebar .logo {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.room-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.room-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #313338;
+    margin: 0.5rem auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+    user-select: none;
+    color: white;
+}
+
+.room-icon:hover {
+    background-color: #5865f2;
+}
+
+.room-icon.active {
+    background-color: #5865f2;
+    border: 2px solid #fff;
+}
+
+/* Mobile toggle button */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5rem;
+    z-index: 1100;
+    color: #fff;
+    background: #1e1f22;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        left: 0;
+        top: 0;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
+}

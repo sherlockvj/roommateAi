@@ -1,0 +1,30 @@
+.bubble {
+  max-width: 70%;
+  padding: 0.8rem;
+  border-radius: 10px;
+  background-color: #404249;
+  color: white;
+  align-self: flex-start;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.bubble.ai {
+  background-color: #3a3c42;
+  border-left: 4px solid #5865f2;
+}
+
+.bubble.user {
+  align-self: flex-end;
+  background-color: #5865f2;
+}
+
+.sender {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-bottom: 0.3rem;
+}
+
+.text {
+  font-size: 1rem;
+  line-height: 1.4;
+}
