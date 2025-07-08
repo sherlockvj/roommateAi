@@ -6,6 +6,14 @@ const initialMessages = [
   { id: 1, sender: "Vishal", text: "Hey team, any doubts?", type: "user" },
   { id: 2, sender: "AI Bot", text: "Need help with recursion?", type: "ai" },
   { id: 3, sender: "Vishal", text: "Yes please!", type: "user" },
+  { id: 4, sender: "Vishal", text: "Yes please!", type: "user" },
+  { id: 5, sender: "Vishal", text: "Yes please!", type: "user" },
+  { id: 6, sender: "Vishal", text: "Yes please!", type: "user" },
+  { id: 7, sender: "Vishal", text: "Yes please!", type: "user" },
+  { id: 8, sender: "Vishal", text: "Yes please!", type: "user" },
+  { id: 9, sender: "Vishal", text: "Yes please!", type: "user" },
+  { id: 10, sender: "Vishal", text: "Yes please!", type: "user" },
+  { id: 11, sender: "Vishal", text: "Yes please!", type: "user" }
 ];
 
 const ChatWindow = ({ room }) => {

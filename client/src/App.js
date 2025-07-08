@@ -17,7 +17,9 @@ function App() {
                     setActiveRoom(room);
                 }}
             />
-            <ChatWindow room={activeRoom} />
+            <div className="main-content">
+                <ChatWindow room={activeRoom} />
+            </div>
         </div>
     );
 }
