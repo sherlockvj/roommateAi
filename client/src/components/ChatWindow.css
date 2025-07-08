@@ -30,7 +30,7 @@
 }
 
 .chat-messages::-webkit-scrollbar-track {
-  background: #1e1f22; /* track */
+  background: #1e1f22; 
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
