@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/LandingPage.css";
 import landingImage from "../assets/landing.svg";
+import CreateRoomModal from "./CreateRoomModal.js";
+import RoomsInfoModal from "./RoomsInfoModal.js";
+import JoinRoomModal from "./JoinRoomModal.js";
 
 const features = [
 
@@ -23,9 +26,20 @@ const features = [
     },
 ];
 
+const rooms = [
+    { id: "1", name: "Study Room", short: "SR" },
+    { id: "2", name: "Doubt Chat", short: "DC" },
+    { id: "3", name: "AI Help", short: "AI" }
+];
+
+
 const LandingPage = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+
+    const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
+    const [showRoomInfoModal, setShowRoomInfoModal] = useState(false);
+    const [showJoinRoomModal, setShowJoinRoomModal] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -50,16 +64,16 @@ const LandingPage = () => {
                     <div className="hero-buttons">
                         {user ? (
                             <>
-                                <button className="hero-btn primary" onClick={() => navigate("/chat")}>
+                                <button className="hero-btn primary" onClick={() => setShowRoomInfoModal(true)}>
                                     Join Room
                                 </button>
-                                <button className="hero-btn secondary" onClick={() => navigate("/create")}>
+                                <button className="hero-btn secondary" onClick={() => setShowCreateRoomModal(true)}>
                                     Create Room
                                 </button>
                             </>
                         ) : (
                             <>
-                                <button className="hero-btn primary" onClick={() => navigate("/chat")}>
+                                <button className="hero-btn primary" onClick={() => setShowCreateRoomModal(true)}>
                                     Start Chat
                                 </button>
                                 <button className="hero-btn secondary" onClick={() => navigate("/login")}>
@@ -67,6 +81,41 @@ const LandingPage = () => {
                                 </button>
                             </>
                         )}
+
+                        <JoinRoomModal
+                            isOpen={showJoinRoomModal}
+                            onClose={() => setShowJoinRoomModal(false)}
+                            onJoin={(roomId) => {
+                                navigate(`/chat/${roomId}`);
+                                setShowJoinRoomModal(false);
+                            }}
+                        />
+
+                        <CreateRoomModal
+                            isOpen={showCreateRoomModal}
+                            onClose={() => setShowCreateRoomModal(false)}
+                            onCreate={(roomData) => {
+                                console.log("Room created:", roomData);
+                            }}
+                            onSwitchToJoin={() => {
+                                setShowCreateRoomModal(false);
+                                setShowJoinRoomModal(true);
+                            }}
+                        />
+
+                        <RoomsInfoModal
+                            isOpen={showRoomInfoModal}
+                            onClose={() => setShowRoomInfoModal(false)}
+                            rooms={rooms}
+                            onJoin={(room) => {
+                                navigate(`/chat/${room._id}`);
+                                setShowRoomInfoModal(false);
+                            }}
+                            onDelete={async (roomId) => {
+                                console.log("DELETE")
+                            }}
+                        />
+
                     </div>
                 </div>
 

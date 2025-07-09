@@ -1,0 +1,64 @@
+.form-group {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background-color: #1e1f22;
+  color: white;
+}
+
+.field-hint {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-top: 0.4rem;
+}
+
+.create-btn {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #5865f2;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  background-color: #4752c4;
+}
+
+.switch-option {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #8791fc;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+  color: #b0b9ff;
+}
