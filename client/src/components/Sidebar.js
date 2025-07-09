@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FaUser, FaPlus } from "react-icons/fa"
 import "./styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
+import JoinRoomModal from "../pages/JoinRoomModal";
+import CreateRoomModal from "../pages/CreateRoomModal";
 
 const rooms = [
     { id: "1", name: "Study Room", short: "SR" },
@@ -12,6 +14,9 @@ const rooms = [
 export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
 
     const [user, setUser] = useState(null);
+    const [showJoinRoomModal, setShowJoinRoomModal] = useState(false);
+    const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -66,15 +71,34 @@ export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
                     <li
                         className="room-icon create-room-btn"
                         onClick={() => {
-                            // You can customize this handler
-                            console.log("Create room clicked");
-                            navigate("/create-room"); // or open a modal
+                            setShowCreateRoomModal(true)
                         }}
                         title="Create New Room"
                     >
                         <FaPlus size={16} />
                     </li>
                 </ul>
+
+                <JoinRoomModal
+                    isOpen={showJoinRoomModal}
+                    onClose={() => setShowJoinRoomModal(false)}
+                    onJoin={(roomId) => {
+                        navigate(`/chat/${roomId}`);
+                        setShowJoinRoomModal(false);
+                    }}
+                />
+
+                <CreateRoomModal
+                    isOpen={showCreateRoomModal}
+                    onClose={() => setShowCreateRoomModal(false)}
+                    onCreate={(roomData) => {
+                        console.log("Room created:", roomData);
+                    }}
+                    onSwitchToJoin={() => {
+                        setShowCreateRoomModal(false);
+                        setShowJoinRoomModal(true);
+                    }}
+                />
 
                 <div className="account-section">
                     <div className="account-icon" onClick={toggleAccountMenu} title="Account">
