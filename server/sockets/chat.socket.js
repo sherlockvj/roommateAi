@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 
-import { saveMessage } from '../services/message.service.js';
 import { generateOpenAIResponse } from '../services/openai.service.js';
+import { saveMessageToRoom } from '../services/message.service.js';
 
 const chatSocketHandler = (socket, io) => {
     console.log(` Socket connected: ${socket.id}`);
@@ -19,12 +19,12 @@ const chatSocketHandler = (socket, io) => {
         roomId = new ObjectId(roomId);
         socket.join(roomId);
         const user = socket.data.user;
-        const saved = await saveMessage(roomId, user._id, message, false);
+        const saved = await saveMessageToRoom(message, user._id, roomId);
         io.to(roomId).emit('receiveMessage', saved);
 
         if (message.toLowerCase().startsWith('@ai')) {
             const aiReply = await generateOpenAIResponse(roomId, message);
-            const savedAI = await saveMessage(roomId, 'ai', aiReply, true);
+            const savedAI = await saveMessageToRoom(aiReply, process.env.AI_USER_ID, roomId);
             io.to(roomId).emit('receiveMessage', savedAI);
         }
     });

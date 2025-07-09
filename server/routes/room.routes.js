@@ -4,11 +4,11 @@ import { createRoom, getMyRooms, joinRoom, getRoomInfoById, removeUser } from '.
 
 const router = express.Router();
 
+router.get('/my', authenticate, getMyRooms);
+router.get('/:roomId', authenticate, getRoomInfoById);
 
 router.post('/create', authenticate, createRoom);
-router.get('/my', authenticate, getMyRooms);
 router.post('/join/:roomId', authenticate, joinRoom);
-router.get('/:roomId', authenticate, getRoomInfoById);
 router.post('/remove/:roomId', authenticate, removeUser);
 
 export default router;
