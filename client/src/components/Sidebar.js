@@ -4,6 +4,7 @@ import "./styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
 import JoinRoomModal from "../pages/JoinRoomModal";
 import CreateRoomModal from "../pages/CreateRoomModal";
+import { useAuth } from "../contexts/AuthContext";
 
 const rooms = [
     { id: "1", name: "Study Room", short: "SR" },
@@ -13,22 +14,11 @@ const rooms = [
 
 export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
 
-    const [user, setUser] = useState(null);
+    const { user } = useAuth();
+
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false);
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            try {
-                const payload = JSON.parse(atob(token.split(".")[1]));
-                setUser({ id: payload.id, name: payload.name || payload.email });
-            } catch (err) {
-                console.error("Invalid token");
-                setUser(null);
-            }
-        }
-    }, []);
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);

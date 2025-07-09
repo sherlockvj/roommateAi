@@ -1,11 +1,14 @@
 import React from "react";
 import AuthForm from "../components/AuthForm";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import api from "../api/axios";
+import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = () => {
 
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const handleSubmit = async (data) => {
     data = { ...data, "strategy": "email" }
@@ -13,6 +16,10 @@ const LoginPage = () => {
       const res = await api.post("/auth/login", data);
       const token = res.data.token;
       localStorage.setItem("token", token);
+
+      const payload = jwtDecode(token);
+      setUser({ id: payload.id, name: payload.name || payload.email });
+
       navigate("/");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
