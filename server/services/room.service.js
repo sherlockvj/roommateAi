@@ -70,6 +70,46 @@ export const joinAndUpdateRoom = async (roomId, userId) => {
     }
 }
 
+export const removeUserFromRoom = async (roomId, userId) => {
+    const db = getDB();
+    const roomObjectId = new ObjectId(roomId);
+    const userObjectId = new ObjectId(userId);
+
+    try {
+        const room = await db.collection(COLLECTION_NAME).findOne({ _id: roomObjectId });
+        if (!room) {
+            throw new ApiError("Room not found", 404);
+        }
+
+        const isParticipant = room.participants.some(
+            id => id.toString() === userObjectId.toString()
+        );
+
+        if (!isParticipant) {
+            throw new ApiError("User is not part of this room", 400);
+        }
+
+        await db.collection(COLLECTION_NAME).updateOne(
+            { _id: roomObjectId },
+            {
+                $pull: { participants: userObjectId },
+                $set: { updatedAt: new Date() },
+            }
+        );
+
+        const updatedRoom = await db.collection(COLLECTION_NAME).findOne({ _id: roomObjectId });
+
+        if (updatedRoom.participants.length === 0) {
+            await db.collection(COLLECTION_NAME).deleteOne({ _id: roomObjectId });
+        }
+
+        return { message: "User successfully removed from room" };
+    } catch (e) {
+        if (e instanceof ApiError) throw e;
+        throw new ApiError("Something went wrong while removing user from room", 500);
+    }
+};
+
 export const getRoomById = async (roomId) => {
     roomId = new ObjectId(roomId);
     const db = getDB();

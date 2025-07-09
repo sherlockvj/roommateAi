@@ -15,7 +15,7 @@ const CreateRoomModal = ({ isOpen, onClose, onCreate, onSwitchToJoin }) => {
       neutral: 0.7,
       "highly-creative": 1.0
     }[temperature];
-    onCreate({ roomName, context, temperature: tempValue });
+    onCreate({ name: roomName, context, temperature: tempValue });
     onClose();
   };
 

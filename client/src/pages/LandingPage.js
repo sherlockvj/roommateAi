@@ -5,6 +5,8 @@ import landingImage from "../assets/landing.svg";
 import CreateRoomModal from "./CreateRoomModal.js";
 import RoomsInfoModal from "./RoomsInfoModal.js";
 import JoinRoomModal from "./JoinRoomModal.js";
+import api from "../api/axios.js";
+import { useRooms } from "../contexts/RoomContext.js";
 
 const features = [
 
@@ -26,16 +28,10 @@ const features = [
     },
 ];
 
-const rooms = [
-    { id: "1", name: "Study Room", short: "SR" },
-    { id: "2", name: "Doubt Chat", short: "DC" },
-    { id: "3", name: "AI Help", short: "AI" }
-];
-
-
 const LandingPage = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+    const { refreshRooms, rooms } = useRooms();
 
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
     const [showRoomInfoModal, setShowRoomInfoModal] = useState(false);
@@ -53,6 +49,33 @@ const LandingPage = () => {
             }
         }
     }, []);
+
+    const handleOnCreateRoomSubmit = async (roomData) => {
+        try {
+            await api.post("/room/create", roomData);
+            await refreshRooms();
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const handlerOnJoinRoomSubmit = async (roomId) => {
+        try {
+            await api.post(`/room/join/${roomId}`)
+            await refreshRooms();
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const handleOnDeleteRoomSubmit = async (roomId) => {
+        try {
+            await api.post(`/room/remove/${roomId}`);
+            await refreshRooms();
+        } catch (e) {
+            alert(e.message);
+        }
+    }
 
     return (
         <div className="landing-container">
@@ -85,8 +108,8 @@ const LandingPage = () => {
                         <JoinRoomModal
                             isOpen={showJoinRoomModal}
                             onClose={() => setShowJoinRoomModal(false)}
-                            onJoin={(roomId) => {
-                                navigate(`/chat/${roomId}`);
+                            onJoin={async (roomId) => {
+                                await handlerOnJoinRoomSubmit(roomId);
                                 setShowJoinRoomModal(false);
                             }}
                         />
@@ -94,8 +117,8 @@ const LandingPage = () => {
                         <CreateRoomModal
                             isOpen={showCreateRoomModal}
                             onClose={() => setShowCreateRoomModal(false)}
-                            onCreate={(roomData) => {
-                                console.log("Room created:", roomData);
+                            onCreate={async (roomData) => {
+                                await handleOnCreateRoomSubmit(roomData);
                             }}
                             onSwitchToJoin={() => {
                                 setShowCreateRoomModal(false);
@@ -111,8 +134,12 @@ const LandingPage = () => {
                                 navigate(`/chat/${room._id}`);
                                 setShowRoomInfoModal(false);
                             }}
+                            onSwitchToJoin={() => {
+                                setShowRoomInfoModal(false);
+                                setShowJoinRoomModal(true);
+                            }}
                             onDelete={async (roomId) => {
-                                console.log("DELETE")
+                                await handleOnDeleteRoomSubmit(roomId);
                             }}
                         />
 

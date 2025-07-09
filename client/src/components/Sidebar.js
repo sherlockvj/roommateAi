@@ -5,16 +5,12 @@ import { useNavigate } from "react-router-dom";
 import JoinRoomModal from "../pages/JoinRoomModal";
 import CreateRoomModal from "../pages/CreateRoomModal";
 import { useAuth } from "../contexts/AuthContext";
-
-const rooms = [
-    { id: "1", name: "Study Room", short: "SR" },
-    { id: "2", name: "Doubt Chat", short: "DC" },
-    { id: "3", name: "AI Help", short: "AI" }
-];
+import { useRooms } from "../contexts/RoomContext";
 
 export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
 
     const { user } = useAuth();
+    const { rooms, loading } = useRooms();
 
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false);
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
@@ -47,16 +43,20 @@ export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
             <div className={`sidebar ${mobileOpen ? "open" : ""}`}>
                 <div className="logo">🧠</div>
                 <ul className="room-list">
-                    {rooms.map((room) => (
-                        <li
-                            key={room.id}
-                            className={`room-icon ${activeRoomId === room.id ? "active" : ""}`}
-                            onClick={() => handleRoomClick(room)}
-                            title={room.name}
-                        >
-                            {room.short}
-                        </li>
-                    ))}
+                    {loading ? (
+                        <li>Loading...</li>
+                    ) : (
+                        rooms.map((room) => (
+                            <li
+                                key={room.id}
+                                className={`room-icon ${activeRoomId === room.id ? "active" : ""}`}
+                                onClick={() => handleRoomClick(room)}
+                                title={room.name}
+                            >
+                                {room.short || room.name.slice(0, 2).toUpperCase()}
+                            </li>
+                        ))
+                    )}
 
                     <li
                         className="room-icon create-room-btn"

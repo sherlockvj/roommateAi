@@ -3,7 +3,7 @@ import React from "react";
 import "./styles/RoomsInfoModal.css";
 import Modal from "../components/Modal.js";
 
-const RoomsInfoModal = ({ isOpen, onClose, rooms = [], onJoin, onDelete }) => {
+const RoomsInfoModal = ({ isOpen, onClose, rooms = [], onJoin, onDelete, onSwitchToJoin }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Your Rooms">
             {rooms.length === 0 ? (
@@ -14,7 +14,7 @@ const RoomsInfoModal = ({ isOpen, onClose, rooms = [], onJoin, onDelete }) => {
                         <div className="room-card" key={room._id}>
                             <div className="room-info">
                                 <h3>{room.name}</h3>
-                                <p className="context-preview">{room.context}</p>
+                                <p className="context-preview">Context: {room.context.substring(0, 10)}...</p>
                             </div>
                             <div className="room-actions">
                                 <button className="join-btn" onClick={() => onJoin(room)}>Join</button>
@@ -22,6 +22,12 @@ const RoomsInfoModal = ({ isOpen, onClose, rooms = [], onJoin, onDelete }) => {
                             </div>
                         </div>
                     ))}
+                    <div className="switch-option">
+                        <span>Want to join a room? </span>
+                        <button className="link-btn" onClick={onSwitchToJoin}>
+                            Browse Rooms
+                        </button>
+                    </div>
                 </div>
             )}
         </Modal>

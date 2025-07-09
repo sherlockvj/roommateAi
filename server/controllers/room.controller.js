@@ -1,5 +1,5 @@
 import { ApiError } from "../errors/ApiError.js";
-import { createUserRoom, joinAndUpdateRoom, getRoomById, getRoomsByUser } from "../services/room.service.js";
+import { createUserRoom, joinAndUpdateRoom, getRoomById, getRoomsByUser, removeUserFromRoom } from "../services/room.service.js";
 
 export const createRoom = async (req, res, next) => {
     const { name, context } = req.body;
@@ -37,6 +37,19 @@ export const getRoomInfoById = async (req, res, next) => {
         next(err instanceof ApiError ? err : new ApiError("Something went wrong.", 500));
     }
 };
+
+export const removeUser = async (req, res, next) => {
+    const roomId = req.params.roomId;
+    const userId = req.user.id;
+
+    try {
+        await removeUserFromRoom(roomId, userId);
+        res.status(200).json({ success: true, message: "User Removed Successfully!" });
+    } catch (err) {
+        console.error(err);
+        next(err instanceof ApiError ? err : new ApiError("Something went wrong.", 500));
+    }
+}
 
 export const getMyRooms = async (req, res) => {
     const userId = req.user.id;

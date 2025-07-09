@@ -4,11 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api/axios";
 import { useAuth } from "../contexts/AuthContext";
+import { useRooms } from "../contexts/RoomContext";
 
 const LoginPage = () => {
 
   const navigate = useNavigate();
   const { setUser } = useAuth();
+  const { refreshRooms } = useRooms();
 
   const handleSubmit = async (data) => {
     data = { ...data, "strategy": "email" }
@@ -19,6 +21,8 @@ const LoginPage = () => {
 
       const payload = jwtDecode(token);
       setUser({ id: payload.id, name: payload.name || payload.email });
+
+      await refreshRooms();
 
       navigate("/");
     } catch (err) {
