@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./AuthForm.css";
+import "./styles/AuthForm.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const AuthForm = ({ title, fields, onSubmit, footer }) => {

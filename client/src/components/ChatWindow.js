@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MessageBubble from "./MessageBubble";
-import "./ChatWindow.css";
+import "./styles/ChatWindow.css";
 
 const initialMessages = [
   { id: 1, sender: "Vishal", text: "Hey team, any doubts?", type: "user" },

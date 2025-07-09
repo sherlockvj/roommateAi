@@ -1,10 +1,22 @@
 import React from "react";
 import AuthForm from "../components/AuthForm";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 const LoginPage = () => {
-  const handleSubmit = (data) => {
-    console.log("Login data:", data);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (data) => {
+    data = { ...data, "strategy": "email" }
+    try {
+      const res = await api.post("/auth/login", data);
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+      navigate("/");
+    } catch (err) {
+      alert(err.response?.data?.message || "Login failed");
+    }
   };
 
   return (

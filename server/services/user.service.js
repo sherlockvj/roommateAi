@@ -11,7 +11,7 @@ export async function findUserByEmail(email) {
     return db.collection(COLLECTION_NAME).findOne({ email });
 }
 
-export async function createUser({ email, password, role = "user" }) {
+export async function createUser({ name, email, password, role = "user" }) {
     const db = getDB();
 
     const existingUser = await findUserByEmail(email);
@@ -43,6 +43,7 @@ export async function createUser({ email, password, role = "user" }) {
     }
 
     const newUser = new EmailUser({
+        name,
         email,
         password,
         role,

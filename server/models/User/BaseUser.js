@@ -1,5 +1,6 @@
 export class BaseUser {
-  constructor({ email, role = "user", provider }) {
+  constructor({ name, email, role = "user", provider }) {
+    this.name = name;
     this.email = email;
     this.role = role;
     this.provider = provider;
@@ -8,6 +9,7 @@ export class BaseUser {
 
   toPublicJSON() {
     return {
+      name: this.name,
       email: this.email,
       role: this.role,
       provider: this.provider,

@@ -1,13 +1,21 @@
 import React from "react";
 import AuthForm from "../components/AuthForm";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
 
-    const handleSubmit = (data) => {
-        console.log("Register data:", data);
-        navigate("/verify-otp", { state: { email: data.email } });
+    const handleSubmit = async (data) => {
+        data = { ...data, "strategy": "email" }
+        try {
+            const res = await api.post("/auth/register", data);
+            if (res.status === 200) {
+                navigate("/verify-otp", { state: { email: data.email } });
+            }
+        } catch (err) {
+            alert(err.response?.data?.message || "Registration failed");
+        }
     };
 
     return (

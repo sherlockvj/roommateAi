@@ -1,16 +1,33 @@
-import React, { useState } from "react";
-import { FaUser } from "react-icons/fa"
-import "./Sidebar.css";
+import React, { useEffect, useState } from "react";
+import { FaUser, FaPlus } from "react-icons/fa"
+import "./styles/Sidebar.css";
+import { useNavigate } from "react-router-dom";
 
 const rooms = [
     { id: "1", name: "Study Room", short: "SR" },
     { id: "2", name: "Doubt Chat", short: "DC" },
-    { id: "3", name: "AI Help", short: "AI" },
+    { id: "3", name: "AI Help", short: "AI" }
 ];
 
-export const Sidebar = ({ onRoomSelect, activeRoomId, user = { name: "Vishal" } }) => {
+export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
+
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const payload = JSON.parse(atob(token.split(".")[1]));
+                setUser({ id: payload.id, name: payload.name || payload.email });
+            } catch (err) {
+                console.error("Invalid token");
+                setUser(null);
+            }
+        }
+    }, []);
+
     const [mobileOpen, setMobileOpen] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
+    const navigate = useNavigate();
 
     const handleRoomClick = (room) => {
         onRoomSelect(room);
@@ -19,6 +36,11 @@ export const Sidebar = ({ onRoomSelect, activeRoomId, user = { name: "Vishal" } 
 
     const toggleAccountMenu = () => {
         setShowAccountMenu((prev) => !prev);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        window.location.reload();
     };
 
     return (
@@ -40,6 +62,18 @@ export const Sidebar = ({ onRoomSelect, activeRoomId, user = { name: "Vishal" } 
                             {room.short}
                         </li>
                     ))}
+
+                    <li
+                        className="room-icon create-room-btn"
+                        onClick={() => {
+                            // You can customize this handler
+                            console.log("Create room clicked");
+                            navigate("/create-room"); // or open a modal
+                        }}
+                        title="Create New Room"
+                    >
+                        <FaPlus size={16} />
+                    </li>
                 </ul>
 
                 <div className="account-section">
@@ -49,9 +83,26 @@ export const Sidebar = ({ onRoomSelect, activeRoomId, user = { name: "Vishal" } 
 
                     {showAccountMenu && (
                         <div className="account-popup">
-                            <div className="account-name">{user?.name || "Guest"}</div>
-                            <button className="account-btn">Settings / Account</button>
-                            <button className="account-btn logout">Logout</button>
+                            {user ? (
+                                <>
+                                    <div className="account-name">{user.name || "Guest"}</div>
+                                    <button className="account-btn" onClick={() => navigate("/account")}>
+                                        Settings / Account
+                                    </button>
+                                    <button className="account-btn logout" onClick={handleLogout}>
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button className="account-btn" onClick={() => navigate("/login")}>
+                                        Login
+                                    </button>
+                                    <button className="account-btn" onClick={() => navigate("/register")}>
+                                        Register
+                                    </button>
+                                </>
+                            )}
                         </div>
                     )}
                 </div>

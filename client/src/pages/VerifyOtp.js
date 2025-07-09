@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
+import api from "../api/axios";
 
 const VerifyOtpPage = () => {
   const location = useLocation();
   const [email, setEmail] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location?.state?.email) {
@@ -12,13 +15,20 @@ const VerifyOtpPage = () => {
     }
   }, [location]);
 
-  const handleSubmit = (data) => {
-    const payload = {
-      email: email || data.email,
-      otp: data.otp,
-    };
-    console.log("Verifying OTP:", payload);
-    // Call your verify API here
+  const handleSubmit = async (data) => {
+    try {
+      const res = await api.post("/auth/verify-otp", {
+        email: email || data.email,
+        otp: data.otp,
+      });
+
+      if (res.status === 200) {
+        alert("✅ OTP verified! You can now login.");
+        navigate("/login");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "OTP verification failed");
+    }
   };
 
   return (

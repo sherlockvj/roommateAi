@@ -19,7 +19,7 @@ export default class EmailAuthStrategy {
         if (!user) throw new ApiError("Invalid credentials.", 401);
 
         const token = jwt.sign(
-            { id: user._id.toString(), email: user.email, role: user.role },
+            { id: user._id.toString(), name: user.name, email: user.email, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
         );
@@ -40,14 +40,15 @@ export default class EmailAuthStrategy {
             refreshToken,
             user: {
                 id: user._id.toString(),
+                name: user.name,
                 email: user.email,
                 role: user.role,
             },
         };
     }
 
-    async register({ email, password, role = "user" }) {
-        const user = await createUser({ email, password, role });
+    async register({ name, email, password, role = "user" }) {
+        const user = await createUser({ name, email, password, role });
 
         return {
             success: true,
@@ -55,6 +56,7 @@ export default class EmailAuthStrategy {
                 "OTP sent to your email. Please verify to activate your account.",
             user: {
                 id: user.id.toString(),
+                name: user.name,
                 email: user.email,
                 role: user.role,
             },

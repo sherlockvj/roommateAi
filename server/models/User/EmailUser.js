@@ -2,8 +2,8 @@ import bcrypt from "bcrypt";
 import { BaseUser } from "./BaseUser.js";
 
 export class EmailUser extends BaseUser {
-  constructor({ email, password, role, isVerified = false, otp = null, otpExpiry = null }) {
-    super({ email, role, provider: "email" });
+  constructor({ name, email, password, role, isVerified = false, otp = null, otpExpiry = null }) {
+    super({name, email, role, provider: "email" });
     this.password = password;
     this.isVerified = isVerified;
     this.otp = otp;
