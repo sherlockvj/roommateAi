@@ -48,7 +48,7 @@ function App() {
                         </div>
                     </div>} />
                 <Route
-                    path="/chat"
+                    path="/chat/:roomId"
                     element={
                         <div className="app-layout">
                             <Sidebar
@@ -60,7 +60,7 @@ function App() {
                                 }}
                             />
                             <div className="main-content">
-                                <ChatWindow room={activeRoom} />
+                                <ChatWindow room={activeRoom} user={user} />
                             </div>
                         </div>
                     }

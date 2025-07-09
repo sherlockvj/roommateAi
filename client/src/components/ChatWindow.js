@@ -1,39 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { io } from "socket.io-client";
+
 import MessageBubble from "./MessageBubble";
 import "./styles/ChatWindow.css";
+import api from "../api/axios";
 
-const initialMessages = [
-  { id: 1, sender: "Vishal", text: "Hey team, any doubts?", type: "user" },
-  { id: 2, sender: "AI Bot", text: "Need help with recursion?", type: "ai" },
-  { id: 3, sender: "Vishal", text: "Yes please!", type: "user" },
-  { id: 4, sender: "Vishal", text: "Yes please!", type: "user" },
-  { id: 5, sender: "Vishal", text: "Yes please!", type: "user" },
-  { id: 6, sender: "Vishal", text: "Yes please!", type: "user" },
-  { id: 7, sender: "Vishal", text: "Yes please!", type: "user" },
-  { id: 8, sender: "Vishal", text: "Yes please!", type: "user" },
-  { id: 9, sender: "Vishal", text: "Yes please!", type: "user" },
-  { id: 10, sender: "Vishal", text: "Yes please!", type: "user" },
-  { id: 11, sender: "Vishal", text: "Yes please!", type: "user" }
-];
+const socket = io("http://localhost:5000", {
+  auth: {
+    token: localStorage.getItem("token"),
+  },
+});
 
-const ChatWindow = ({ room }) => {
-  const [messages, setMessages] = useState(initialMessages);
+const ChatWindow = ({ user }) => {
+  const { roomId } = useParams();
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (!roomId || !user) return;
+
+
+    const fetchMessages = async () => {
+      try {
+        const res = await api.get(`/message/room/${roomId}`);
+        setMessages(res.data.messages);
+      } catch (err) {
+        console.error("Failed to load messages", err);
+      }
+    };
+
+    fetchMessages();
+
+    socket.emit("joinRoom", {
+      roomId,
+      user: {
+        _id: user.id,
+        name: user.name,
+      },
+    });
+
+    // Receive messages
+    socket.on("receiveMessage", (message) => {
+      console.log("New message received via socket:", message);
+      setMessages((prev) => [...prev, message]);
+    });
+
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, [roomId, user]);
+
+  useEffect(scrollToBottom, [messages]);
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages([...messages, { id: Date.now(), sender: "You", text: input, type: "user" }]);
+    socket.emit("sendMessage", {
+      roomId,
+      message: input,
+    });
     setInput("");
   };
 
   return (
     <div className="chat-window">
-      <div className="chat-header">{room?.name || "Select a Room"}</div>
+      <div className="chat-header">Room ID: {roomId}</div>
 
       <div className="chat-messages">
         {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
+          <MessageBubble key={msg._id} message={msg} currentUserId={user?.id} />
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="chat-input">

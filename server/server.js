@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import app from "./app.js";
 import { connectDB } from "./config/db.js";
 import chatSocketHandler from "./sockets/chat.socket.js";
+import { stringify } from "querystring";
 
 dotenv.config();
 
@@ -20,16 +21,21 @@ const io = new Server(server, {
 
 io.use((socket, next) => {
     const token = socket.handshake.auth?.token;
+
     if (!token) {
-        return next(new Error('Unauthorized'));
+        return next(new Error("Authentication token missing"));
     }
+
     try {
-        const user = jwt.verify(token, process.env.JWT_SECRET);
-        socket.data.user = user;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Decoded:: " + stringify(decoded))
+        socket.data.user = {
+            id: decoded.id,
+            name: decoded.name || decoded.email,
+        };
         next();
     } catch (err) {
-        console.log(err);
-        return next(new Error('Invalid token'));
+        return next(new Error("Authentication failed"));
     }
 });
 
