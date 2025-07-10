@@ -59,6 +59,7 @@ const ChatWindow = () => {
     });
 
     socket.on("receiveMessage", (message) => {
+      console.log("Message recieved on client::" + JSON.stringify(message))
       setMessages((prev) => [...prev, message]);
     });
 

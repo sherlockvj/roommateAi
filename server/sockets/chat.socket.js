@@ -53,12 +53,14 @@ const chatSocketHandler = (socket, io) => {
             // --- 3. Handle @ai Mentions ---
             if (message.trim().toLowerCase().startsWith("@ai")) {
                 const aiReply = await generateOpenAIResponse(roomId, message);
-
+                
                 const savedAI = await saveMessageToRoom({
                     text: aiReply,
                     userId: process.env.AI_USER_ID,
                     roomId,
                 });
+
+                console.log("Ai Response::Saved");
 
                 io.to(roomId).emit("receiveMessage", {
                     ...savedAI,
