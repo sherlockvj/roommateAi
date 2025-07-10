@@ -42,7 +42,7 @@ const ChatWindow = () => {
 
     fetchRoomAndMessages();
 
-    const socket = io("http://localhost:5000", {
+    const socket = io("https://roommateai.onrender.com", {
       auth: {
         token: localStorage.getItem("token"),
       },
