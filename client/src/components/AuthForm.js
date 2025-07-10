@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/AuthForm.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const AuthForm = ({ title, fields, onSubmit, footer }) => {
+const AuthForm = ({ title, fields, onSubmit, footer, loading, loadingMessages = [] }) => {
   const [formData, setFormData] = useState({});
   const [showPassword, setShowPassword] = useState({});
+  const [messageIndex, setMessageIndex] = useState(0);
+
+  useEffect(() => {
+    if (!loading) return;
+
+    const interval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [loading, loadingMessages.length]);
 
   const handleChange = (e, name) => {
     setFormData({ ...formData, [name]: e.target.value });
@@ -36,7 +47,16 @@ const AuthForm = ({ title, fields, onSubmit, footer }) => {
             </div>
           </div>
         ))}
-        <button type="submit">{title}</button>
+        <button type="submit" disabled={loading} className={`auth-submit-btn ${loading ? "loading" : ""}`}>
+          {loading ? <div className="loader-spinner" /> : title}
+        </button>
+
+        {loading && (
+          <div className="loading-message">
+            <em>{loadingMessages[messageIndex]}</em>
+          </div>
+        )}
+
       </form>
       {footer}
     </div>

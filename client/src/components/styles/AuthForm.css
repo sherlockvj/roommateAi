@@ -62,3 +62,48 @@
 .auth-form-container a {
     color: white;
 }
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #5865f2;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  position: relative;
+}
+
+.auth-submit-btn.loading {
+  background: linear-gradient(to right, #5865f2, #4752c4);
+  color: transparent;
+  pointer-events: none;
+}
+
+.loader-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+.loading-message {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  background: linear-gradient(to right, #5865f2, #4752c4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

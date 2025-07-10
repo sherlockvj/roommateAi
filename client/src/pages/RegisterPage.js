@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthForm from "../components/AuthForm";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
@@ -8,6 +8,20 @@ const RegisterPage = () => {
     const navigate = useNavigate();
 
     const { showNotification } = useNotification();
+    const [loading, setLoading] = useState(false);
+
+    const loadingMessages = [
+        "Securing your account...",
+        "Authenticating your credentials...",
+        "Verifying your digital identity...",
+        "Waking up your chat assistant...",
+        "Fetching your rooms and secrets...",
+        "Setting up your dashboard...",
+        "Establishing secure connection...",
+        "Decrypting token of trust...",
+        "Finalizing...",
+    ];
+
 
     const handleSubmit = async (data) => {
         data = { ...data, "strategy": "email" }
@@ -22,6 +36,8 @@ const RegisterPage = () => {
             return;
         }
 
+        setLoading(true);
+
         try {
             const res = await api.post("/auth/register", data);
             if (res.status === 200) {
@@ -30,6 +46,8 @@ const RegisterPage = () => {
             }
         } catch (err) {
             showNotification("error", err.response?.data?.message || "Registration failed");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -38,6 +56,8 @@ const RegisterPage = () => {
             <AuthForm
                 title="Register"
                 onSubmit={handleSubmit}
+                loading={loading}
+                loadingMessages={loadingMessages}
                 fields={[
                     { name: "name", label: "Name", type: "text", placeholder: "John Doe" },
                     { name: "email", label: "Email", type: "email", placeholder: "you@example.com" },
