@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { FaUser, FaPlus } from "react-icons/fa"
+import React, { useState } from "react";
+import { FaUser, FaPlus } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
 import "./styles/Sidebar.css";
-import { useNavigate } from "react-router-dom";
+
 import JoinRoomModal from "../pages/JoinRoomModal";
 import CreateRoomModal from "../pages/CreateRoomModal";
 import { useAuth } from "../contexts/AuthContext";
 import { useRooms } from "../contexts/RoomContext";
 
-export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
-
+export const Sidebar = () => {
     const { user } = useAuth();
     const { rooms, loading } = useRooms();
+    const navigate = useNavigate();
+    const { roomId: activeRoomId } = useParams(); // from URL
 
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false);
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
-
-
     const [mobileOpen, setMobileOpen] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
-    const navigate = useNavigate();
 
     const handleRoomClick = (room) => {
-        onRoomSelect(room);
+        navigate(`/chat/${room._id}`);
         setMobileOpen(false);
     };
 
@@ -42,14 +41,15 @@ export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
 
             <div className={`sidebar ${mobileOpen ? "open" : ""}`}>
                 <div className="logo">🧠</div>
+
                 <ul className="room-list">
                     {loading ? (
                         <li>Loading...</li>
                     ) : (
                         rooms.map((room) => (
                             <li
-                                key={room.id}
-                                className={`room-icon ${activeRoomId === room.id ? "active" : ""}`}
+                                key={room._id}
+                                className={`room-icon ${activeRoomId === room._id ? "active" : ""}`}
                                 onClick={() => handleRoomClick(room)}
                                 title={room.name}
                             >
@@ -60,9 +60,7 @@ export const Sidebar = ({ onRoomSelect, activeRoomId }) => {
 
                     <li
                         className="room-icon create-room-btn"
-                        onClick={() => {
-                            setShowCreateRoomModal(true)
-                        }}
+                        onClick={() => setShowCreateRoomModal(true)}
                         title="Create New Room"
                     >
                         <FaPlus size={16} />

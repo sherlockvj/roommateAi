@@ -5,12 +5,12 @@ import ChatWindow from "./components/ChatWindow.js";
 import LoginPage from "./pages/LoginPage.js";
 import RegisterPage from "./pages/RegisterPage.js";
 import VerifyOtpPage from "./pages/VerifyOtp.js";
-import "./index.css";
 import LandingPage from "./pages/LandingPage.js";
+import "./index.css";
 
 function App() {
-    const [activeRoom, setActiveRoom] = useState(null);
     const [user, setUser] = useState(null);
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -33,34 +33,24 @@ function App() {
                 <Route path="/verify-otp" element={<VerifyOtpPage />} />
 
                 {/* Main App Layout */}
-                <Route path="/" element={
-                    <div className="app-layout">
-                        <Sidebar
-                            user={user}
-                            activeRoomId={activeRoom?.id}
-                            onRoomSelect={(room) => {
-                                console.log("Room selected:", room);
-                                setActiveRoom(room);
-                            }}
-                        />
-                        <div className="main-content">
-                            <LandingPage user={user} />
+                <Route
+                    path="/"
+                    element={
+                        <div className="app-layout">
+                            <Sidebar user={user} />
+                            <div className="main-content">
+                                <LandingPage user={user} />
+                            </div>
                         </div>
-                    </div>} />
+                    }
+                />
                 <Route
                     path="/chat/:roomId"
                     element={
                         <div className="app-layout">
-                            <Sidebar
-                                user={user}
-                                activeRoomId={activeRoom?.id}
-                                onRoomSelect={(room) => {
-                                    console.log("Room selected:", room);
-                                    setActiveRoom(room);
-                                }}
-                            />
+                            <Sidebar user={user} />
                             <div className="main-content">
-                                <ChatWindow room={activeRoom} user={user} />
+                                <ChatWindow user={user} />
                             </div>
                         </div>
                     }
