@@ -5,12 +5,15 @@ import { jwtDecode } from "jwt-decode";
 import api from "../api/axios";
 import { useAuth } from "../contexts/AuthContext";
 import { useRooms } from "../contexts/RoomContext";
+import { useNotification } from "../contexts/NotificationContext";
 
 const LoginPage = () => {
 
   const navigate = useNavigate();
   const { setUser } = useAuth();
   const { refreshRooms } = useRooms();
+
+   const { showNotification } = useNotification();
 
   const searchParams = new URLSearchParams(window.location.search);
 
@@ -27,10 +30,10 @@ const LoginPage = () => {
       setUser({ id: payload.id, name: payload.name || payload.email });
 
       await refreshRooms();
-
+      showNotification("success", "Logged in successfully");
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      showNotification("error", err.response?.data?.message || "Login failed");
     }
   };
 

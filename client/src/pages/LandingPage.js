@@ -7,6 +7,7 @@ import RoomsInfoModal from "./RoomsInfoModal.js";
 import JoinRoomModal from "./JoinRoomModal.js";
 import api from "../api/axios.js";
 import { useRooms } from "../contexts/RoomContext.js";
+import { useNotification } from "../contexts/NotificationContext.js";
 
 const features = [
   {
@@ -32,6 +33,8 @@ const LandingPage = () => {
   const location = useLocation();
   const { refreshRooms, rooms } = useRooms();
 
+  const { showNotification } = useNotification();
+
   const [user, setUser] = useState(null);
   const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
   const [showRoomInfoModal, setShowRoomInfoModal] = useState(false);
@@ -51,7 +54,6 @@ const LandingPage = () => {
     }
   }, []);
 
-  // Show JoinRoomModal if redirected from ProtectedRoute
   useEffect(() => {
     if (location.state?.showJoinModal && location.state.room) {
       setRedirectedRoom(location.state.room);
@@ -61,10 +63,14 @@ const LandingPage = () => {
 
   const handleOnCreateRoomSubmit = async (roomData) => {
     try {
-      await api.post("/room/create", roomData);
-      await refreshRooms();
+      const response = await api.post("/room/create", roomData);
+      if (response.data.success) {
+        navigate(`/chat/${response.data.room._id}`);
+        await refreshRooms();
+        showNotification("success", "Room created successfully!");
+      }
     } catch (e) {
-      alert(e.message);
+      showNotification("error", e.response?.data?.message || "Failed to create room.");
     }
   };
 
@@ -72,9 +78,10 @@ const LandingPage = () => {
     try {
       await api.post(`/room/join/${roomId}`);
       await refreshRooms();
+      showNotification("success", "Joined room successfully!");
       navigate(`/chat/${roomId}`);
     } catch (e) {
-      alert(e.message);
+      showNotification("error", e.response?.data?.message || "Failed to join room.");
     }
   };
 
@@ -82,8 +89,9 @@ const LandingPage = () => {
     try {
       await api.post(`/room/remove/${roomId}`);
       await refreshRooms();
+      showNotification("success", "Room deleted.");
     } catch (e) {
-      alert(e.message);
+      showNotification("error", e.response?.data?.message || "Failed to delete room.");
     }
   };
 
@@ -106,8 +114,8 @@ const LandingPage = () => {
               </>
             ) : (
               <>
-                <button className="hero-btn primary" onClick={() => setShowCreateRoomModal(true)}>
-                  Start Chat
+                <button className="hero-btn primary" onClick={() =>  navigate("/register")}>
+                  Sign Up
                 </button>
                 <button className="hero-btn secondary" onClick={() => navigate("/login")}>
                   Sign In

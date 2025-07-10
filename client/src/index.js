@@ -4,17 +4,19 @@ import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import { RoomsProvider } from './contexts/RoomContext';
 import { BrowserRouter, Router } from 'react-router-dom';
-import { SocketProvider } from './contexts/SocketContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <RoomsProvider>
+      <NotificationProvider>
+        <AuthProvider>
+          <RoomsProvider>
             <App />
-        </RoomsProvider>
-      </AuthProvider>
+          </RoomsProvider>
+        </AuthProvider>
+      </NotificationProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -2,19 +2,23 @@ import React from "react";
 import AuthForm from "../components/AuthForm";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import { useNotification } from "../contexts/NotificationContext";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
+
+    const { showNotification } = useNotification();
 
     const handleSubmit = async (data) => {
         data = { ...data, "strategy": "email" }
         try {
             const res = await api.post("/auth/register", data);
             if (res.status === 200) {
+                showNotification("success", "Registered successfully! Verify your email.");
                 navigate("/verify-otp", { state: { email: data.email } });
             }
         } catch (err) {
-            alert(err.response?.data?.message || "Registration failed");
+            showNotification("error", err.response?.data?.message || "Registration failed");
         }
     };
 

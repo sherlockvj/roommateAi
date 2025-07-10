@@ -2,14 +2,19 @@ import React, { useState } from "react";
 
 import "./styles/CreateRoomModal.css";
 import Modal from "../components/Modal";
+import { useNotification } from "../contexts/NotificationContext";
 
 const CreateRoomModal = ({ isOpen, onClose, onCreate, onSwitchToJoin }) => {
   const [roomName, setRoomName] = useState("");
   const [context, setContext] = useState("A helpful assistant");
   const [temperature, setTemperature] = useState("neutral");
 
+  const { showNotification } = useNotification();
+
   const handleSubmit = () => {
-    if (!roomName.trim()) return;
+    if (!roomName.trim()) {
+      showNotification("error", "Room name cannot be empty");
+    };
     const tempValue = {
       accurate: 0.2,
       neutral: 0.7,

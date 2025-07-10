@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "./AuthContext";
+import { useNotification } from "./NotificationContext";
 
 const RoomsContext = createContext();
 
@@ -8,6 +9,8 @@ export const useRooms = () => useContext(RoomsContext);
 
 export const RoomsProvider = ({ children }) => {
     const { user } = useAuth();
+    const { showNotification } = useNotification();
+
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -30,6 +33,7 @@ export const RoomsProvider = ({ children }) => {
         } catch (err) {
             console.error("Failed to fetch rooms", err);
             setRooms([]);
+            showNotification("error", "Failed to load your rooms.");
         } finally {
             setLoading(false);
         }

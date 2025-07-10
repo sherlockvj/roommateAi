@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./styles/JoinRoomModal.css";
 import Modal from "../components/Modal";
 import api from "../api/axios";
+import { useNotification } from "../contexts/NotificationContext";
 
 const JoinRoomModal = ({ isOpen, onClose, onJoin, prefillRoomId = "" }) => {
   const [roomIdInput, setRoomIdInput] = useState("");
   const [roomDetails, setRoomDetails] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     if (prefillRoomId) {
@@ -26,6 +29,7 @@ const JoinRoomModal = ({ isOpen, onClose, onJoin, prefillRoomId = "" }) => {
       setRoomDetails(res.data.room);
     } catch (err) {
       setError("Room not found.");
+      showNotification("error", "Room not found.");
     } finally {
       setLoading(false);
     }

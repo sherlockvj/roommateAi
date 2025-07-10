@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
 import api from "../api/axios";
+import { useNotification } from "../contexts/NotificationContext";
 
 const VerifyOtpPage = () => {
   const location = useLocation();
   const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     if (location?.state?.email) {
@@ -23,11 +25,11 @@ const VerifyOtpPage = () => {
       });
 
       if (res.status === 200) {
-        alert("✅ OTP verified! You can now login.");
+        showNotification("success", "✅ OTP verified! You can now login.");
         navigate("/login");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "OTP verification failed");
+      showNotification("error", err.response?.data?.message || "OTP verification failed");
     }
   };
 

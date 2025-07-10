@@ -9,10 +9,13 @@ import { useAuth } from "../contexts/AuthContext";
 import { useRooms } from "../contexts/RoomContext";
 import RoomsInfoModal from "../pages/RoomsInfoModal";
 import api from "../api/axios";
+import { useNotification } from "../contexts/NotificationContext";
 
 export const Sidebar = () => {
     const { user } = useAuth();
     const { rooms, loading, refreshRooms } = useRooms();
+
+    const { showNotification } = useNotification();
 
     const navigate = useNavigate();
     const { roomId: activeRoomId } = useParams();
@@ -27,8 +30,9 @@ export const Sidebar = () => {
         try {
             await api.post(`/room/remove/${roomId}`);
             await refreshRooms();
+            showNotification("success", "Room deleted successfully.");
         } catch (e) {
-            alert(e.message);
+            showNotification("error", e.response?.data?.message || e.message);
         }
     };
 
@@ -38,10 +42,11 @@ export const Sidebar = () => {
             console.log("ROOM CREATED" + JSON.stringify(response.data))
             if (response.data.success) {
                 navigate(`/chat/${response.data.room._id}`);
-                 await refreshRooms();
+                await refreshRooms();
+                showNotification("success", "Room created successfully!");
             }
         } catch (e) {
-            alert(e.message);
+            showNotification("error", e.response?.data?.message || e.message);
         }
     };
 
@@ -57,6 +62,7 @@ export const Sidebar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
+        showNotification("success", "Successfully logged out!");
         navigate("/");
         window.location.reload();
     };
@@ -88,13 +94,14 @@ export const Sidebar = () => {
                         ))
                     )}
 
-                    <li
+                    {user ? (<li
                         className="room-icon create-room-btn"
                         onClick={() => setShowCreateRoomModal(true)}
                         title="Create New Room"
                     >
                         <FaPlus size={16} />
-                    </li>
+                    </li>) : (<span></span>)}
+
                 </ul>
 
                 <JoinRoomModal
