@@ -1,22 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
+import { FaCopy } from "react-icons/fa";
 
 import MessageBubble from "./MessageBubble";
 import "./styles/ChatWindow.css";
 import api from "../api/axios";
+import { useAuth } from "../contexts/AuthContext";
 
-const socket = io("http://localhost:5000", {
-  auth: {
-    token: localStorage.getItem("token"),
-  },
-});
-
-const ChatWindow = ({ user }) => {
+const ChatWindow = () => {
   const { roomId } = useParams();
   const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [room, setRoom] = useState(null);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
+
+  const { user } = useAuth();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -25,17 +25,27 @@ const ChatWindow = ({ user }) => {
   useEffect(() => {
     if (!roomId || !user) return;
 
-
-    const fetchMessages = async () => {
+    const fetchRoomAndMessages = async () => {
       try {
-        const res = await api.get(`/message/room/${roomId}`);
-        setMessages(res.data.messages);
+        const roomRes = await api.get(`/room/${roomId}`);
+        setRoom(roomRes.data.room);
+
+        const msgRes = await api.get(`/message/room/${roomId}`);
+        setMessages(msgRes.data.messages);
       } catch (err) {
-        console.error("Failed to load messages", err);
+        console.error("Failed to load room or messages", err);
       }
     };
 
-    fetchMessages();
+    fetchRoomAndMessages();
+
+    const socket = io("http://localhost:5000", {
+      auth: {
+        token: localStorage.getItem("token"),
+      },
+    });
+
+    setSocket(socket)
 
     socket.emit("joinRoom", {
       roomId,
@@ -45,9 +55,7 @@ const ChatWindow = ({ user }) => {
       },
     });
 
-    // Receive messages
     socket.on("receiveMessage", (message) => {
-      console.log("New message received via socket:", message);
       setMessages((prev) => [...prev, message]);
     });
 
@@ -67,9 +75,28 @@ const ChatWindow = ({ user }) => {
     setInput("");
   };
 
+  if (!room) return <div className="chat-window">Loading room...</div>;
+
   return (
     <div className="chat-window">
-      <div className="chat-header">Room ID: {roomId}</div>
+      <div className="chat-header">
+        <div className="room-info">
+          <h2 className="room-title">{room.name}</h2>
+          <div className="room-id-copy">
+            <span className="room-id">Room ID: {room._id}</span>
+            <button
+              className="copy-button"
+              onClick={() => {
+                navigator.clipboard.writeText(room._id);
+                alert("Room ID copied!");
+              }}
+            >
+              <FaCopy />
+            </button>
+          </div>
+        </div>
+      </div>
+
 
       <div className="chat-messages">
         {messages.map((msg) => (

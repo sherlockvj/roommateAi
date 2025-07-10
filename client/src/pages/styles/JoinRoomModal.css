@@ -37,3 +37,19 @@
 .join-by-id-content button:hover {
   background-color: #4752c4;
 }
+
+.error {
+  color: red;
+  margin-top: 8px;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.cancel-btn {
+  background-color: #eee;
+  color: #333;
+}

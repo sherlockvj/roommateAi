@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUser, FaPlus } from "react-icons/fa";
+import { FaUser, FaPlus, FaHome } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import "./styles/Sidebar.css";
 
@@ -12,7 +12,7 @@ export const Sidebar = () => {
     const { user } = useAuth();
     const { rooms, loading } = useRooms();
     const navigate = useNavigate();
-    const { roomId: activeRoomId } = useParams(); // from URL
+    const { roomId: activeRoomId } = useParams();
 
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false);
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
@@ -30,6 +30,7 @@ export const Sidebar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
+        navigate("/");
         window.location.reload();
     };
 
@@ -40,7 +41,9 @@ export const Sidebar = () => {
             </div>
 
             <div className={`sidebar ${mobileOpen ? "open" : ""}`}>
-                <div className="logo">🧠</div>
+                <div className="home-icon" onClick={() => navigate("/")} title="Home">
+                    <FaHome size={24} />
+                </div>
 
                 <ul className="room-list">
                     {loading ? (

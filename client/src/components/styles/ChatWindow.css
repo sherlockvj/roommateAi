@@ -30,13 +30,13 @@
 }
 
 .chat-messages::-webkit-scrollbar-track {
-  background: #1e1f22; 
+  background: #1e1f22;
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
   background-color: #8791fc;
   border-radius: 8px;
-  border: 2px solid #1e1f22; 
+  border: 2px solid #1e1f22;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
@@ -72,6 +72,50 @@
 .chat-input button:hover {
   background-color: #4752c4;
 }
+
+.chat-header {
+ background-color: #232428;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #444;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.room-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.room-title {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.room-id-copy {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: #fceaea;
+}
+
+.copy-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.copy-button:hover {
+  color: #ffd5d5;
+}
+
 
 @media (max-width: 768px) {
   .chat-window {

@@ -12,8 +12,11 @@ const LoginPage = () => {
   const { setUser } = useAuth();
   const { refreshRooms } = useRooms();
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const redirectTo = searchParams.get("redirect") || "/";
+
   const handleSubmit = async (data) => {
-    data = { ...data, "strategy": "email" }
+    data = { ...data, strategy: "email" };
     try {
       const res = await api.post("/auth/login", data);
       const token = res.data.token;
@@ -24,7 +27,7 @@ const LoginPage = () => {
 
       await refreshRooms();
 
-      navigate("/");
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
     }

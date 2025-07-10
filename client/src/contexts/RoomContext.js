@@ -1,22 +1,35 @@
-
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../api/axios";
-
+import { useAuth } from "./AuthContext";
 
 const RoomsContext = createContext();
 
 export const useRooms = () => useContext(RoomsContext);
 
 export const RoomsProvider = ({ children }) => {
+    const { user } = useAuth();
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const fetchRooms = async () => {
+        setLoading(true);
+
+        if (!user) {
+            setRooms([]);
+            setLoading(false);
+            return;
+        }
+
         try {
-            const res = await api.get("/room/my")
+            const res = await api.get("/room/my", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            });
             setRooms(res.data.rooms || []);
         } catch (err) {
             console.error("Failed to fetch rooms", err);
+            setRooms([]);
         } finally {
             setLoading(false);
         }
@@ -25,11 +38,8 @@ export const RoomsProvider = ({ children }) => {
     const refreshRooms = () => fetchRooms();
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            fetchRooms();
-        }
-    }, []);
+        fetchRooms();
+    }, [user]);
 
     return (
         <RoomsContext.Provider value={{ rooms, loading, refreshRooms }}>
