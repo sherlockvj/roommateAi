@@ -7,7 +7,16 @@ const RoomsInfoModal = ({ isOpen, onClose, rooms = [], onJoin, onDelete, onSwitc
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Your Rooms">
             {rooms.length === 0 ? (
-                <p className="empty-msg">You haven’t created any rooms yet.</p>
+                <div>
+                    <p className="empty-msg">You haven’t created any rooms yet.</p>
+                    <div className="switch-option">
+                        <span>Want to join a room? </span>
+                        <button className="link-btn" onClick={onSwitchToJoin}>
+                            Browse Rooms
+                        </button>
+                    </div>
+                </div>
+
             ) : (
                 <div className="room-list">
                     {rooms.map((room) => (

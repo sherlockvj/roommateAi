@@ -11,6 +11,17 @@ const RegisterPage = () => {
 
     const handleSubmit = async (data) => {
         data = { ...data, "strategy": "email" }
+        const password = data.password;
+
+        const isValidPassword = password.length >= 6 &&
+            /[A-Za-z]/.test(password) &&
+            /\d/.test(password);
+
+        if (!isValidPassword) {
+            showNotification("error", "Password must be at least 6 characters and contain at least one letter and one number.");
+            return;
+        }
+
         try {
             const res = await api.post("/auth/register", data);
             if (res.status === 200) {

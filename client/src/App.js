@@ -17,12 +17,22 @@ function App() {
             {/* Auth Pages */}
             <Route path="/login" element={
                 <PublicOnlyRoute>
-                    <LoginPage />
+                    <div className="app-layout">
+                        <Sidebar />
+                        <div className="main-content">
+                            <LoginPage />
+                        </div>
+                    </div>
                 </PublicOnlyRoute>
             } />
             <Route path="/register" element={
                 <PublicOnlyRoute>
-                    <RegisterPage />
+                    <div className="app-layout">
+                        <Sidebar />
+                        <div className="main-content">
+                            <RegisterPage />
+                        </div>
+                    </div>
                 </PublicOnlyRoute>
             } />
             <Route path="/verify-otp" element={
