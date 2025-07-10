@@ -13,6 +13,7 @@ const LoginPage = () => {
   const { refreshRooms } = useRooms();
 
   const searchParams = new URLSearchParams(window.location.search);
+
   const redirectTo = searchParams.get("redirect") || "/";
 
   const handleSubmit = async (data) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { FaCopy } from "react-icons/fa";
 
@@ -18,6 +18,8 @@ const ChatWindow = () => {
 
   const { user } = useAuth();
 
+  const navigate = useNavigate();
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -34,6 +36,7 @@ const ChatWindow = () => {
         setMessages(msgRes.data.messages);
       } catch (err) {
         console.error("Failed to load room or messages", err);
+        navigate("/")
       }
     };
 

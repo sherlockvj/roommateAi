@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import { Sidebar } from "./components/Sidebar";
-import ChatWindow from "./components/ChatWindow";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerifyOtpPage from "./pages/VerifyOtp";
@@ -10,16 +9,29 @@ import LandingPage from "./pages/LandingPage";
 
 import "./index.css";
 import ProtectedChatRoute from "./components/ProtectedChatRoute";
+import PublicOnlyRoute from "./components/PublicOnlyRoute";
 
 function App() {
     return (
         <Routes>
             {/* Auth Pages */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/verify-otp" element={<VerifyOtpPage />} />
+            <Route path="/login" element={
+                <PublicOnlyRoute>
+                    <LoginPage />
+                </PublicOnlyRoute>
+            } />
+            <Route path="/register" element={
+                <PublicOnlyRoute>
+                    <RegisterPage />
+                </PublicOnlyRoute>
+            } />
+            <Route path="/verify-otp" element={
+                <PublicOnlyRoute>
+                    <VerifyOtpPage />
+                </PublicOnlyRoute>
+            } />
 
-            {/* Landing Page with Sidebar */}
+
             <Route
                 path="/"
                 element={

@@ -21,7 +21,6 @@ const ProtectedChatRoute = () => {
   useEffect(() => {
     const checkAccess = async () => {
 
-      console.log(user);
       if (!user || !roomId) {
         setChecking(false);
         return;
@@ -36,6 +35,9 @@ const ProtectedChatRoute = () => {
           setNotMember(true);
           setShowJoinModal(true);
           navigate("/", { replace: true, state: { showJoinModal: true, room: res.data.room } });
+        } else {
+          console.log("Is Already a member")
+          navigate(`/chat/${roomId}`)
         }
       } catch (err) {
         console.error("Error checking room access", err);
