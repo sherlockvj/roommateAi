@@ -62,7 +62,7 @@ const RegisterPage = () => {
                     { name: "password", label: "Password", type: "password", placeholder: "********" },
                 ]}
                 footer={
-                    <><p><i style={{ "fontSize": "small" }}>For SOM - you can register with dummy email.</i></p>
+                    <><p><i style={{ "fontSize": "small", "fontWeight": "bolder", "color": "#f92828" }}>For SOM - you can register with dummy email.</i></p>
                         <p>Already have an account? <Link to="/login">Login</Link></p></>}
             />
         </div>
