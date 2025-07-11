@@ -115,7 +115,7 @@ const LandingPage = () => {
             ) : (
               <>
                 <button className="hero-btn primary" onClick={() =>  navigate("/register")}>
-                  Sign Up
+                  Create User
                 </button>
                 <button className="hero-btn secondary" onClick={() => navigate("/login")}>
                   Sign In
