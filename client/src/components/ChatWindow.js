@@ -112,7 +112,7 @@ const ChatWindow = () => {
       <div className="chat-input">
         <input
           type="text"
-          placeholder="Type a message..."
+          placeholder="Type a message...Tag the AI with @ai before your message — e.g., @ai how are you?"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}

@@ -10,14 +10,6 @@ export const createUserRoom = async (name, context, userId) => {
     userId = new ObjectId(userId);
 
     try {
-        const existingRoom = await db.collection(COLLECTION_NAME).findOne({
-            name: { $regex: new RegExp(`^${trimmedName}$`, 'i') }
-        });
-
-        if (existingRoom) {
-            throw new ApiError("Room with this name already exists", 400);
-        }
-
         const room = {
             name: trimmedName,
             context: context?.trim() || '',
