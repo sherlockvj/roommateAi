@@ -16,40 +16,16 @@ export async function createUser({ name, email, password, role = "user" }) {
 
     const existingUser = await findUserByEmail(email);
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
-
     if (existingUser) {
-        if (existingUser.isVerified) {
-            throw new ApiError("User already exists and is verified.");
-        }
+        throw new ApiError("User already exists and is verified.");
 
-        if (new Date() > new Date(existingUser.otpExpiry)) {
-            await db.collection(COLLECTION_NAME).updateOne(
-                { email },
-                {
-                    $set: {
-                        otp,
-                        otpExpiry,
-                        password: await bcrypt.hash(password, 10)
-                    },
-                }
-            );
-
-            await sendOtpEmail(email, otp);
-            return { id: existingUser._id, email, role };
-        }
-        throw new ApiError("User already exists. Please verify your email.");
     }
 
     const newUser = new EmailUser({
         name,
         email,
         password,
-        role,
-        isVerified: false,
-        otp,
-        otpExpiry,
+        role
     });
 
     await newUser.hashPassword();
@@ -57,8 +33,6 @@ export async function createUser({ name, email, password, role = "user" }) {
     const { insertedId } = await db
         .collection(COLLECTION_NAME)
         .insertOne(newUser);
-
-    await sendOtpEmail(email, otp);
 
     return { id: insertedId, email, role };
 }
@@ -85,7 +59,6 @@ export async function verifyUserOtp(email, otp) {
 export async function validateUserCredentials(email, password) {
     const user = await findUserByEmail(email);
     if (!user) return null;
-    if (!user.isVerified) throw new ApiError("Email not verified");
 
     const isMatch = await EmailUser.comparePasswords(password, user.password);
     if (!isMatch) return null;

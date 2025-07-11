@@ -53,7 +53,7 @@ export default class EmailAuthStrategy {
         return {
             success: true,
             message:
-                "OTP sent to your email. Please verify to activate your account.",
+                "Registration successful. Please login",
             user: {
                 id: user.id.toString(),
                 name: user.name,

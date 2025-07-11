@@ -35,17 +35,6 @@ function App() {
                     </div>
                 </PublicOnlyRoute>
             } />
-            <Route path="/verify-otp" element={
-                <PublicOnlyRoute>
-                    <div className="app-layout">
-                        <Sidebar />
-                        <div className="main-content">
-                            <VerifyOtpPage />
-                        </div>
-                    </div>
-                </PublicOnlyRoute>
-            } />
-
 
             <Route
                 path="/"
